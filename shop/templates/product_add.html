@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Добавление продукта{% endblock %}
+{% block content %}
+    <form method="POST" action="{% url 'product_add' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="title" class="form-label">Наименование категории</label>
+            <input type="text" name="title" class="form-control" id="title">
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Описание категории</label>
+            <textarea class="form-control" name="description" id="description"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="pic_img" class="form-label">Ссылка на фото продукта</label>
+            <input type="text" class="form-control" name="pic_img" id="pic_img">
+        </div>
+        <div class="mb-3">
+            <label for="category" class="form-label">Категория продукта</label>
+            <select id="category" name="category" class="form-control">
+                {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="price" class="form-label">Цена продукта</label>
+            <input type="number" name="price" class="form-control" id="price">
+        </div>
+        <button type="submit" class="btn btn-primary">Добавить</button>
+    </form>
+{% endblock %}
