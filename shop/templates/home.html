@@ -2,5 +2,27 @@
 {% load static %}
 {% block title %}Главная{% endblock %}
 {% block content %}
-<h1>Qqq</h1>
+    <div class="row align-items-start">
+        {% for product in products %}
+            <div class="col">
+                <div class="card h-100 mb-3" style="max-width: 540px;">
+                    <div class="row g-0">
+                        <div class="col-md-4 d-flex">
+                            <img src="{{ product.pic_img }}" class="img-fluid rounded-start" alt="{{ product.title }}">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ product.title }}</h5>
+                                <p class="card-text">{{ product.select }}</p>
+                                <p class="card-text">
+                                    <strong class="text-body-secondary">Цена:{{ product.price_coast }}$</strong></p>
+                                <p class="card-text"><strong class="text-body-secondary"><a href="#">Посмотреть
+                                    детали</a></strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}
