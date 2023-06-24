@@ -8,8 +8,9 @@ def products_view(request):
     return render(request, "home.html", {'products': product})
 
 
-def product_view(request):
-    return render(request, "home.html")
+def product_view(request, *args, **kwargs):
+    product = Product.objects.get(pk=kwargs["id"])
+    return render(request, "product.html", {'product': product})
 
 
 def category_add_view(request):
