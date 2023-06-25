@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.db.models import RestrictedError
+from django.shortcuts import render, redirect, get_object_or_404
 
 from shop.models import Product, Category
 
@@ -37,3 +38,25 @@ def product_add_view(request):
             select_id=request.POST.get('category'),
         )
         return redirect("home")
+
+
+def categories_view(request, *args, **kwargs):
+    if not kwargs:
+        categories = Category.objects.all().order_by('id')
+        return render(request, "categories.html", {'categories': categories})
+    else:
+        try:
+            Category.objects.get(pk=kwargs['id']).delete()
+            return redirect('categories')
+        except RestrictedError:
+            return redirect('categories')
+
+
+def category_edit_view(request, *args, **kwargs):
+    if request.method == "GET":
+        category = Category.objects.get(pk=kwargs['id'])
+        return render(request, "category_edit.html", {'category': category})
+    else:
+        Category.objects.filter(pk=kwargs['id']).update(title=request.POST.get('title'),
+                                                        description=request.POST.get('description'))
+        return redirect('categories')
