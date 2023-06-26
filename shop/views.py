@@ -1,3 +1,5 @@
+import copy
+
 from django.db.models import RestrictedError
 from django.shortcuts import render, redirect
 
@@ -24,16 +26,17 @@ def product_view(request, *args, **kwargs):
 def product_edit_view(request, *args, **kwargs):
     if request.method == "GET":
         product = Product.objects.get(pk=kwargs['id'])
+        categories = Category.objects.all()
         product.price_coast = str(product.price_coast)
-        return render(request, "product_edit.html", {'product': product})
+        return render(request, "product_edit.html", {'product': product, 'categories': categories})
     else:
         Product.objects.filter(pk=kwargs['id']).update(
             title=request.POST.get('title'),
             description=request.POST.get('description'),
-            select=request.POST.get('select'),
-            price_coast=request.POST.get('price_coast'),
+            select_id=request.POST.get('category'),
+            price_coast=float(request.POST.get('price')),
             pic_img=request.POST.get('pic_img'))
-        return redirect('product')
+        return redirect('home')
 
 
 def category_add_view(request):

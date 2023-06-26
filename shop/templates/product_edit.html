@@ -18,9 +18,12 @@
         <div class="mb-3">
             <label for="category" class="form-label">Категория продукта</label>
             <select id="category" name="category" class="form-control">
-                <option selected="selected">{{ product.select }}</option>
                 {% for category in categories %}
-                    <option value="{{ category.id }}">{{ category.title }}</option>
+                    {% if category.id == product.select_id %}
+                        <option selected="selected" value="{{ product.id }}">{{ product.select }}</option>
+                    {% else %}
+                        <option value="{{ category.id }}">{{ category.title }}</option>
+                    {% endif %}
                 {% endfor %}
             </select>
         </div>
