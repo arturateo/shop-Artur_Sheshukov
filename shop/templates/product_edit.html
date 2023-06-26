@@ -1,23 +1,24 @@
 {% extends 'base.html' %}
-{% block title %}Добавление продукта{% endblock %}
+{% block title %}Изменение категории{% endblock %}
 {% block content %}
-    <form method="POST" action="{% url 'product_add' %}">
+    <form method="POST" action="{% url 'product_edit' product.id %}">
         {% csrf_token %}
         <div class="mb-3">
             <label for="title" class="form-label">Наименование продукта</label>
-            <input type="text" name="title" class="form-control" id="title">
+            <input type="text" name="title" class="form-control" id="title" value="{{ product.title }}">
         </div>
         <div class="mb-3">
             <label for="description" class="form-label">Описание категории</label>
-            <textarea class="form-control" name="description" id="description"></textarea>
+            <textarea class="form-control" name="description" id="description" >{{ product.description }}</textarea>
         </div>
         <div class="mb-3">
             <label for="pic_img" class="form-label">Ссылка на фото продукта</label>
-            <input type="text" class="form-control" name="pic_img" id="pic_img">
+            <input type="text" class="form-control" name="pic_img" id="pic_img" value="{{ product.pic_img }}">
         </div>
         <div class="mb-3">
             <label for="category" class="form-label">Категория продукта</label>
             <select id="category" name="category" class="form-control">
+                <option selected="selected">{{ product.select }}</option>
                 {% for category in categories %}
                     <option value="{{ category.id }}">{{ category.title }}</option>
                 {% endfor %}
@@ -25,8 +26,8 @@
         </div>
         <div class="mb-3">
             <label for="price" class="form-label">Цена продукта</label>
-            <input type="number" name="price" class="form-control" id="price">
+            <input type="number" name="price" class="form-control" id="price" value="{{ product.price_coast }}">
         </div>
-        <button type="submit" class="btn btn-primary">Добавить</button>
+        <button type="submit" class="btn btn-primary">Изменить</button>
     </form>
 {% endblock %}
