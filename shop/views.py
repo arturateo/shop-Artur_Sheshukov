@@ -82,7 +82,7 @@ def category_edit_view(request, pk):
         form = CategoryForm(instance=category, data=request.POST)
         if form.is_valid():
             form.save()
-            return redirect('categories', pk=pk)
+            return redirect('categories')
         else:
             return render(request, "category_edit.html", {'form': form, 'category': category})
 
