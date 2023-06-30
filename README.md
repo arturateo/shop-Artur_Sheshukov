@@ -16,11 +16,7 @@
     * Измените файл .env на ваши данные
       *     SECRET_KEY=SECRET_KEY
       
-            NAME=NAME
-            USER=USER
-            PASSWORD=PASSWORD
-            HOST=HOST
-            PORT=PORT
+            DATABASE_URL=psql://user:password@127.0.0.1:5432/db_name
   * Выполнить миграции 
     *       python manage.py migrate
   * Выгрузить фикстуры в БД 

@@ -1,8 +1,8 @@
-import copy
-
 from django.db.models import RestrictedError
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
+from shop.forms.category_form import CategoryForm
+from shop.forms.product_form import ProductForm
 from shop.models import Product, Category
 
 
@@ -11,77 +11,92 @@ def products_view(request):
     return render(request, "home.html", {'products': product})
 
 
-def product_view(request, *args, **kwargs):
-    if not "Delete" in request.path.title():
-        product = Product.objects.get(pk=kwargs["id"])
-        return render(request, "product.html", {'product': product})
-    else:
-        try:
-            Product.objects.get(pk=kwargs['id']).delete()
-            return redirect('home')
-        except RestrictedError:
-            return redirect('home')
+def product_view(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    return render(request, "product.html", {'product': product})
 
 
-def product_edit_view(request, *args, **kwargs):
+def product_delete_view(request, pk):
+    product = get_object_or_404(Product, pk=pk)
     if request.method == "GET":
-        product = Product.objects.get(pk=kwargs['id'])
-        categories = Category.objects.all()
-        product.price_coast = str(product.price_coast)
-        return render(request, "product_edit.html", {'product': product, 'categories': categories})
+        return render(request, 'delete_confirm.html', {"product": product})
     else:
-        Product.objects.filter(pk=kwargs['id']).update(
-            title=request.POST.get('title'),
-            description=request.POST.get('description'),
-            select_id=request.POST.get('category'),
-            price_coast=float(request.POST.get('price')),
-            pic_img=request.POST.get('pic_img'))
-        return redirect('home')
-
-
-def category_add_view(request):
-    if request.method == "GET":
-        return render(request, "category_add.html")
-    else:
-        Category.objects.create(
-            title=request.POST.get('title'),
-            description=request.POST.get('description')
-        )
-        return redirect("home")
+        button = request.POST.get('delete')
+        if button:
+            product.delete()
+            return redirect('home')
+        return render(request, 'product.html', {"product": product})
 
 
 def product_add_view(request):
     if request.method == "GET":
-        categories = Category.objects.all()
-        return render(request, "product_add.html", {'categories': categories})
+        form = ProductForm()
+        return render(request, "product_add.html", {'form': form})
     else:
-        Product.objects.create(
-            title=request.POST.get('title'),
-            description=request.POST.get('description'),
-            price_coast=request.POST.get('price'),
-            pic_img=request.POST.get('pic_img'),
-            select_id=request.POST.get('category'),
-        )
-        return redirect("home")
+        form = ProductForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("home")
+        else:
+            return render(request, "product_add.html", {'form': form})
 
 
-def categories_view(request, *args, **kwargs):
-    if not kwargs:
-        categories = Category.objects.all().order_by('id')
-        return render(request, "categories.html", {'categories': categories})
-    else:
-        try:
-            Category.objects.get(pk=kwargs['id']).delete()
-            return redirect('categories')
-        except RestrictedError:
-            return redirect('categories')
-
-
-def category_edit_view(request, *args, **kwargs):
+def product_edit_view(request, pk):
+    product = get_object_or_404(Product, pk=pk)
     if request.method == "GET":
-        category = Category.objects.get(pk=kwargs['id'])
-        return render(request, "category_edit.html", {'category': category})
+        form = ProductForm(instance=product)
+        return render(request, "product_edit.html", {'form': form, 'product': product})
     else:
-        Category.objects.filter(pk=kwargs['id']).update(title=request.POST.get('title'),
-                                                        description=request.POST.get('description'))
+        form = ProductForm(instance=product, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('product', pk=pk)
+        else:
+            return render(request, "product_edit.html", {'form': form, 'product': product})
+
+
+def category_add_view(request):
+    if request.method == "GET":
+        form = CategoryForm()
+        return render(request, "category_add.html", {'form': form})
+    else:
+        form = CategoryForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("categories")
+        else:
+            return render(request, "category_add.html", {'form': form})
+
+
+def categories_view(request):
+    categories = Category.objects.all().order_by('id')
+    return render(request, "categories.html", {'categories': categories})
+
+
+def category_edit_view(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+    if request.method == "GET":
+        form = CategoryForm(instance=category)
+        return render(request, "category_edit.html", {'form': form, 'category': category})
+    else:
+        form = CategoryForm(instance=category, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('categories', pk=pk)
+        else:
+            return render(request, "category_edit.html", {'form': form, 'category': category})
+
+
+def categories_delete_view(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+    if request.method == "GET":
+        return render(request, 'delete_confirm.html', {"category": category})
+    else:
+        button = request.POST.get('delete')
+        if button:
+            try:
+                category.delete()
+                return redirect('categories')
+            except RestrictedError:
+                return redirect('categories')
         return redirect('categories')

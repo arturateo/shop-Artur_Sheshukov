@@ -2,15 +2,8 @@
 {% block title %}Добавление категории{% endblock %}
 {% block content %}
     <form method="POST" action="{% url 'category_add' %}">
-        {% csrf_token %}
-        <div class="mb-3">
-            <label for="text" class="form-label">Наименование категории</label>
-            <input type="text" name="title" class="form-control" id="text">
-        </div>
-        <div class="mb-3">
-            <label for="description" class="form-label">Описание категории</label>
-            <input type="text" name="description" class="form-control" id="description">
-        </div>
+        {% include 'partial/form.html' %}
+
         <button type="submit" class="btn btn-primary">Добавить</button>
     </form>
 {% endblock %}
