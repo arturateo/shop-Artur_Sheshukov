@@ -48,6 +48,7 @@ def product_delete_view(request, pk):
 def product_add_view(request):
     if request.method == "GET":
         form = ProductForm()
+        print(form)
         return render(request, "product_add.html", {'form': form})
     else:
         form = ProductForm(data=request.POST)
