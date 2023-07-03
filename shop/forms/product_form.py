@@ -12,5 +12,5 @@ class ProductForm(forms.ModelForm):
                    'select': widgets.Select(attrs={'class': 'form-control'}),
                    'price_coast': widgets.NumberInput(attrs={'class': 'form-control'}),
                    'pic_img': widgets.TextInput(attrs={'class': 'form-control'}),
-                   'balance': widgets.NumberInput(attrs={'class': 'form-control'})
+                   'balance': widgets.NumberInput(attrs={'class': 'form-control', 'min': 0})
                    }

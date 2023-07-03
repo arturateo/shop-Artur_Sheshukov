@@ -7,8 +7,12 @@ from shop.models import Product, Category
 
 
 def products_view(request):
-    product = Product.objects.all()
-    return render(request, "home.html", {'products': product})
+    search = request.GET.get('search')
+    if not search:
+        products = Product.objects.all().filter(balance__gt=0)
+    else:
+        products = Product.objects.all().filter(balance__gt=0, title__icontains=search)
+    return render(request, "home.html", {'products': products})
 
 
 def product_view(request, pk):

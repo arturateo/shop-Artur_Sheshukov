@@ -21,10 +21,10 @@ class Product(models.Model):
     select = models.ForeignKey("shop.Category", on_delete=models.RESTRICT,
                                verbose_name="Категория", related_name='category')
     create_date_time = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
-    price_coast = models.DecimalField(null=False, blank=False, max_digits=1000,
+    price_coast = models.DecimalField(null=False, blank=False, max_digits=9,
                                       decimal_places=2, verbose_name='Цена товара')
     pic_img = models.CharField(max_length=500, null=False, blank=False, verbose_name='Изображение товара')
-    balance = models.IntegerField(null=False, blank=False, default=1, validators=[MinValueValidator(1)],
+    balance = models.IntegerField(null=False, blank=False, default=1, validators=[MinValueValidator(0)],
                                   verbose_name='Остаток товара на складе')
 
     def __str__(self):
