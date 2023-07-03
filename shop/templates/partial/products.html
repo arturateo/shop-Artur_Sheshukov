@@ -1,0 +1,35 @@
+<form class="form-inline row align-items-start" method="GET">
+        {% csrf_token %}
+        <div class="form-group mx-sm-3 mb-2 col-md-2">
+            <label for="search" class="sr-only">
+                <input type="text" class="form-control" id="search" name="search" placeholder="Поиск">
+            </label>
+        </div>
+        <div class="form-group mx-sm-3 mb-2 col-md-4">
+            <button type="submit" class="btn btn-primary">Искать</button>
+        </div>
+    </form>
+    <div class="row align-items-start">
+        {% for product in products %}
+            <div class="col-md-4">
+                <div class="card d-flex h-100 mb-3" style="max-width: 540px;">
+                    <div class="row g-0">
+                        <div class="col-md-4 d-flex">
+                            <img src="{{ product.pic_img }}" class="img-fluid rounded-start" alt="{{ product.title }}">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ product.title }}</h5>
+                                <a href="{% url 'products' product.select %}"><p class="card-text">{{ product.select }}</p></a>
+                                <p class="card-text">
+                                    <strong class="text-body-secondary">Цена:{{ product.price_coast }}$</strong></p>
+                                <p class="card-text"><strong class="text-body-secondary"><a
+                                        href="{% url 'product' product.id %}">Посмотреть
+                                    детали</a></strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
